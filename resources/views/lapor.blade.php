@@ -11,135 +11,83 @@
     @include('components.navbar')
     <!-- resources/views/lapor.blade.php -->
 
-@section('content')
-    <div class="relative w-full h-[400px] overflow-hidden mt-10">
-        <!-- Slides -->
-        <div class="relative w-full h-full">
-            <div class="slide fade absolute w-full h-full">
-                <div class="absolute inset-0 bg-gradient-to-t from-[#0d0d0da4] to-transparent"></div>
-                <img src="{{ asset('assets/bencana alam.jpg') }}" class="w-full h-full object-cover">
-                <div class="absolute bottom-10 left-6 text-white">
-                    <h2 class="text-3xl font-bold">Bencana Alam</h2>
-                    <p class="text-lg max-w-md">Bantuan sampai lebih cepat.</p>
+    <section class="container mx-auto px-4 py-10">
+    <h1 class="text-3xl font-bold text-teal-700 mb-8 mt-10">Laporan Publik</h1>
+
+    @if ($lapor->count())
+        <div class="space-y-6">
+            @foreach ($lapor as $row)
+                @php
+                    $nama = $row->privasi === 'Anonim' ? 'Anonim' : $row->username;
+                    $status = strtolower($row->status ?? '');
+                    $statusColor = match($status) {
+                        'selesai' => 'bg-green-100 text-green-800',
+                        'diproses' => 'bg-blue-100 text-blue-800',
+                        'pending' => 'bg-yellow-100 text-yellow-800',
+                        'batal' => 'bg-red-100 text-red-800',
+                        default => 'bg-gray-100 text-gray-800'
+                    };
+                    $showCheck = ($status === 'selesai');
+                    $isBencanaAlam = ($row->kategori === 'Bencana Alam');
+                    $isActiveDonasi = ($isBencanaAlam && in_array($status, ['selesai', 'diproses']));
+                @endphp
+
+                <div class="rounded-lg shadow-md p-6 mb-6 border hover:shadow-lg transition-shadow duration-300 bg-white border-gray-200">
+                    <span class="px-3 py-1.5 text-sm font-semibold rounded-full mb-4 inline-block {{ $statusColor }}">
+                        {{ ucfirst($status) }}
+                    </span>
+
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-12 h-12 bg-teal-500 rounded-full flex items-center justify-center text-white font-bold text-lg">
+                                <span>{{ strtoupper(substr($nama, 0, 1)) }}</span>
+                            </div>
+                            <div>
+                                <p class="font-semibold text-gray-800 text-lg">{{ $nama }}</p>
+                                <p class="text-gray-500">{{ \Carbon\Carbon::parse($row->tanggal)->format('d M Y') }}</p>
+                            </div>
+                        </div>
+                        @if ($showCheck)
+                            <div class="text-green-600 text-2xl" title="Laporan selesai">
+                                <i class="fa-solid fa-check fa-lg" style="color: #00ff4c;"></i>
+                            </div>
+                        @endif
+                    </div>
+
+                    <h2 class="text-xl font-bold text-teal-700 mb-3">{{ $row->judul }}</h2>
+                    <p class="text-gray-700 mb-4 text-base leading-relaxed">{!! nl2br(e($row->isi)) !!}</p>
+
+                    <div class="grid md:grid-cols-2 text-base text-gray-600 gap-2 mb-4">
+                        <p><strong class="text-teal-600">Lokasi:</strong> {{ $row->lokasi }}</p>
+                        <p><strong class="text-teal-600">Instansi:</strong> {{ $row->nama_instansi }}</p>
+                        <p><strong class="text-teal-600">Kategori:</strong> {{ $row->kategori }}</p>
+                        <p><strong class="text-teal-600">Privasi:</strong> {{ $row->privasi }}</p>
+                        @if ($row->lampiran)
+                            <p><strong class="text-teal-600">Lampiran:</strong>
+                                <a href="{{ url('lihat_lampiran?id=' . $row->id_laporan) }}" class="text-blue-500 hover:underline font-medium">Lihat 📎</a>
+                            </p>
+                        @endif
+                    </div>
+
+                    @if ($isActiveDonasi)
+                        <div class="mt-4">
+                            @if (session()->has('id_user'))
+                                <a href="{{ url('form_donasi?id_laporan=' . $row->id_laporan) }}" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-200">
+                                    🎗️ Donasi Sekarang
+                                </a>
+                            @else
+                                <a href="{{ route('login') }}" class="bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-200">
+                                    🔒 Login untuk Donasi
+                                </a>
+                            @endif
+                        </div>
+                    @endif
                 </div>
-            </div>
-            <div class="slide fade absolute w-full h-full hidden">
-                <div class="absolute inset-0 bg-gradient-to-t from-[#0d0d0da4] to-transparent"></div>
-                <img src="{{ asset('assets/Demo.jpg') }}" class="w-full h-full object-cover">
-                <div class="absolute bottom-10 left-6 text-white">
-                    <h2 class="text-3xl font-bold">Ketidakadilan</h2>
-                    <p class="text-lg max-w-md">Menindak lanjut semua ketidakadilan.</p>
-                </div>
-            </div>
-            <div class="slide fade absolute w-full h-full hidden">
-                <div class="absolute inset-0 bg-gradient-to-t from-[#0d0d0da4] to-transparent"></div>
-                <img src="{{ asset('assets/kerusakan infrastruktur.jpg') }}" class="w-full h-full object-cover">
-                <div class="absolute bottom-10 left-6 text-white">
-                    <h2 class="text-3xl font-bold">Kerusakan Infrastruktur</h2>
-                    <p class="text-lg max-w-md">Infrastruktur rusak cepat pulih.</p>
-                </div>
-            </div>
+            @endforeach
         </div>
-    </div>
-
-    <div class="container mx-auto p-6">
-        <div class="flex flex-col items-center text-center py-16">
-            <h1 class="text-5xl font-bold text-black">
-                @auth
-                    Selamat Datang {{ Auth::user()->nama }} di Lapor.In
-                @else
-                    Selamat Datang di Lapor.In
-                @endauth
-            </h1>
-            <p class="text-lg text-gray-600 mt-4">Platform pengaduan yang cepat dan responsif</p>
-        </div>
-    </div>
-
-    <!-- Form Laporan -->
-    <div class="max-w-4xl mx-auto p-8">
-        <div class="bg-white p-6 rounded-lg shadow-lg">
-            <h2 class="text-2xl text-black font-semibold text-center mb-6">Sampaikan Laporan Anda</h2>
-
-            @if(session('success'))
-                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
-                    <span class="block sm:inline">{{ session('success') }}</span>
-                </div>
-            @endif
-            @if(session('error'))
-                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
-                    <span class="block sm:inline">{{ session('error') }}</span>
-                </div>
-            @endif
-            @if ($errors->any())
-                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
-
-            <form action="{{ route('lapor.store') }}" method="POST" enctype="multipart/form-data">
-                @csrf
-                <div class="mb-4">
-                    <label for="judul" class="block text-sm font-semibold text-gray-700">Ketikan Judul Laporan Anda</label>
-                    <input type="text" id="judul" name="judul" class="w-full mt-2 px-4 py-2 border rounded-lg" value="{{ old('judul') }}" required>
-                </div>
-
-                <div class="mb-4">
-                    <label for="isi" class="block text-sm font-semibold text-gray-700">Ketikan Isi Laporan Anda</label>
-                    <textarea id="isi" name="isi" class="w-full mt-2 px-4 py-2 border rounded-lg" rows="4" required>{{ old('isi') }}</textarea>
-                </div>
-
-                <div class="mb-4">
-                    <label for="tanggal" class="block text-sm font-semibold text-gray-700">Tanggal Kejadian</label>
-                    <input type="date" id="tanggal" name="tanggal" class="w-full mt-2 px-4 py-2 border rounded-lg" value="{{ old('tanggal') }}" required>
-                </div>
-
-                <div class="mb-4">
-                    <label for="lokasi" class="block text-sm font-semibold text-gray-700">Lokasi Kejadian</label>
-                    <input type="text" id="lokasi" name="lokasi" class="w-full mt-2 px-4 py-2 border rounded-lg" value="{{ old('lokasi') }}" required>
-                </div>
-
-                <div class="mb-4">
-                    <label for="instansi" class="block text-sm font-semibold text-gray-700">Pilih Instansi Tujuan</label>
-                    <select id="instansi" name="instansi" class="w-full mt-2 px-4 py-2 border rounded-lg" required>
-                        <option value="" disabled selected>Pilih instansi</option>
-                        @foreach ($instansi as $row)
-                            <option value="{{ $row->id_instansi }}">{{ $row->nama_instansi }}</option>
-                        @endforeach
-                    </select>
-                </div>
-
-                <div class="mb-4">
-                    <label for="kategori" class="block text-sm font-semibold text-gray-700">Pilih Kategori Laporan Anda</label>
-                    <select id="kategori" name="kategori" class="w-full mt-2 px-4 py-2 border rounded-lg" required>
-                        <option value="" disabled selected>Pilih kategori</option>
-                        <option value="Bencana Alam">Bencana Alam</option>
-                        <option value="Aduan">Aduan</option>
-                    </select>
-                </div>
-
-                <div class="mb-4">
-                    <label for="lampiran" class="block text-sm font-semibold text-gray-700">Upload Bukti Aduan</label>
-                    <input type="file" id="lampiran" name="lampiran" class="w-full mt-2 px-4 py-2 border rounded-lg">
-                </div>
-
-                <div class="mb-4 flex items-center">
-                    <input type="radio" id="anonim" name="privasi" value="Anonim" class="mr-2" required>
-                    <label for="anonim" class="text-sm">Anonymous</label>
-                    <input type="radio" id="publik" name="privasi" value="Publik" class="ml-4 mr-2" required>
-                    <label for="publik" class="text-sm">Publik</label>
-                </div>
-
-                <div class="text-center">
-                    <button type="submit" class="bg-orange-600 text-white px-6 py-3 rounded-full text-l w-full hover:bg-orange-700">Lapor!</button>
-                </div>
-            </form>
-        </div>
-    </div>
-@endsection
-
+    @else
+        <p class="text-gray-500 text-lg">Belum ada laporan publik yang masuk.</p>
+    @endif
+</section>
 </body>
 </html>
