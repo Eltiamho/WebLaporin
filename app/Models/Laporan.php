@@ -13,6 +13,7 @@ class Laporan extends Model
     protected $primaryKey = 'id_laporan';
     public $incrementing = true;
     protected $keyType = 'int';
+     public $timestamps = false;
 
     protected $fillable = [
         'id_user',

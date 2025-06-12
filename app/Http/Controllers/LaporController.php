@@ -3,59 +3,81 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Laporan;
 use App\Models\Instansi;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class LaporController extends Controller
 {
-    // Menampilkan form Lapor (Halaman utama)
-    public function index()
-    {
-        // Mengambil instansi yang aktif
-        $instansi = Instansi::where('status', 'Aktif')->get();
-
-        return view('lapor', compact('instansi'));
-    }
-
-    // Menyimpan laporan
     public function store(Request $request)
     {
-        // Validasi form
+        // Validasi form input
         $request->validate([
             'judul' => 'required|string|max:255',
             'isi' => 'required|string',
             'tanggal' => 'required|date',
-            'lokasi' => 'required|string',
-            'instansi' => 'required|exists:instansi,id_instansi',
-            'kategori' => 'required|string',
-            'privasi' => 'nullable|string|in:Publik,Anonim',
-            'lampiran' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'lokasi' => 'required|string|max:255',
+            'instansi' => 'required|string|max:255',
+            'kategori' => 'required|string|max:255',
+            'lampiran' => 'nullable|file|mimes:jpg,jpeg,png,pdf,docx|max:2048',
+            'privasi' => 'nullable|in:Publik,Privat'
         ]);
 
-        // Menyimpan data laporan
-        $laporan = new Laporan();
-        $laporan->id_user = Auth::id(); // Menggunakan Auth untuk mendapatkan ID pengguna
-        $laporan->judul = $request->judul;
-        $laporan->isi = $request->isi;
-        $laporan->tanggal = $request->tanggal;
-        $laporan->lokasi = $request->lokasi;
-        $laporan->instansi = $request->instansi;
-        $laporan->kategori = $request->kategori;
-        $laporan->privasi = $request->privasi ?? 'Publik'; // Defaultnya 'Publik'
+        // Ambil user ID dari session
+        $id_user = Session::get('id_user');
 
-        // Proses upload lampiran jika ada
-        if ($request->hasFile('lampiran')) {
-            $lampiranPath = $request->file('lampiran')->store('laporan_files', 'public');
-            $laporan->lampiran = $lampiranPath;
+        if (!$id_user) {
+            return redirect()->route('login')->withErrors(['login' => 'Silakan login terlebih dahulu.']);
         }
 
-        // Status default adalah 'Pending'
-        $laporan->status = 'Pending';
-        $laporan->save();
+        // Simpan file lampiran jika ada
+        $lampiranPath = null;
+        if ($request->hasFile('lampiran')) {
+            $lampiranPath = $request->file('lampiran')->store('lampiran', 'public');
+        }
 
-        return redirect()->route('lapor')->with('success', 'Laporan berhasil disampaikan!');
+        // Simpan ke database
+        Laporan::create([
+            'id_user' => $id_user,
+            'judul' => $request->judul,
+            'isi' => $request->isi,
+            'tanggal' => $request->tanggal,
+            'lokasi' => $request->lokasi,
+            'instansi' => $request->instansi,
+            'kategori' => $request->kategori,
+            'lampiran' => $lampiranPath,
+            'privasi' => $request->privasi ?? 'Publik',
+            'status' => 'Pending',
+        ]);
+
+        return redirect()->route('lapor')->with('success', 'Laporan berhasil dikirim.');
     }
+    public function index(Request $request)
+{
+    $kategori = $request->query('kategori');
+    $instansi = $request->query('instansi');
+
+    $lapor = DB::table('laporan')
+        ->leftJoin('user', 'laporan.id_user', '=', 'user.id_user')
+        ->leftJoin('instansi', 'laporan.instansi', '=', 'instansi.id_instansi')
+        ->select('laporan.*', 'user.username', 'instansi.nama_instansi');
+
+    if (!empty($kategori)) {
+        $lapor->where('laporan.kategori', $kategori);
+    }
+
+    if (!empty($instansi)) {
+        $lapor->where('instansi.nama_instansi', $instansi);
+    }
+
+    $lapor = $lapor->orderBy('laporan.id_laporan', 'desc')->get();
+
+    return view('lapor', ['lapor' => $lapor]);
 }
+}
+
 
