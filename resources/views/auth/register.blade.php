@@ -12,6 +12,16 @@
 
 <div class="bg-white rounded shadow-md max-w-4xl mx-auto p-8 mt-24">
     <h2 class="text-2xl font-bold mb-10 text-center"><i class="fa-solid fa-user px-2"></i>Daftar Akun</h2>
+    @if ($errors->any())
+    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
+        <strong>Terjadi kesalahan:</strong>
+        <ul class="list-disc list-inside mt-2">
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
     <form action="{{ route('register.submit') }}" method="POST">
         @csrf
         <div class="grid grid-cols-1 md:grid-cols-1 gap-4">

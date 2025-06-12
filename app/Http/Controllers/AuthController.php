@@ -95,11 +95,16 @@ class AuthController extends Controller
     }
 }
     // Logout
-    public function logout()
+    public function logout(Request $request)
     {
-        Session::flush(); // Menghapus semua session
-        Auth::logout(); // Logout Laravel
-        return redirect()->route('login');
+        // Hapus semua session login manual
+        $request->session()->forget('is_login');
+        $request->session()->forget('username');
+        $request->session()->forget('id_user'); // jika kamu menyimpan id_user juga
+
+        // Redirect ke halaman login
+        return redirect('/login');
     }
+
 }
 

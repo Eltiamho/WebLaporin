@@ -231,7 +231,7 @@
 
                     <!-- Pilihan Anonim atau Rahasia -->
                     <div class="mb-4 flex items-center">
-                        <input type="radio" id="anonim" name="privasi" value="Anonim" class="mr-2" required>
+                        <input type="radio" id="anonim" name="privasi" value="Privat" class="mr-2" required>
                         <label for="anonim" class="text-sm">Anonymous</label>
                         <input type="radio" id="publik" name="privasi" value="Publik" class="ml-4 mr-2" required>
                         <label for="publik" class="text-sm">Publik</label>

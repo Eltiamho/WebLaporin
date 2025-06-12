@@ -11,7 +11,7 @@
     @include('components.navbar')
     @section('content')
     <div class="relative w-full h-[275px] overflow-hidden">
-        @include('layouts.navbar')
+        
 
         <section class="relative bg-cover bg-center text-white py-10 mt-16 text-center flex" style="background-image: url('{{ asset('assets/bg about.png') }}');">
             <div class="absolute inset-0 bg-black bg-opacity-50"></div>
@@ -52,12 +52,12 @@
                             <div><strong>Privasi:</strong> {{ $laporan->privasi }}</div>
                             <div><strong>Lampiran:</strong>
                                 @if ($laporan->lampiran)
-                                    <a href="{{ route('lampiran.view', ['id' => $laporan->id_laporan]) }}" target="_blank" class="text-blue-600 hover:underline">
-                                        Lihat Lampiran
-                                    </a>
-                                @else
-                                    Tidak ada
-                                @endif
+                                <a href="{{ asset('storage/lampiran/' . $laporan->lampiran) }}" target="_blank" class="text-blue-600 underline">
+                                    Lihat Lampiran </a>
+                                    @else
+    <span class="text-gray-500">Tidak ada lampiran</span>
+@endif
+
                             </div>
                         </div>
 
