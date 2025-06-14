@@ -9,7 +9,7 @@
     <title>REGISTER</title>
 </head>
 <body>
-
+@include('components.navbar')
 <div class="bg-white rounded shadow-md max-w-4xl mx-auto p-8 mt-24">
     <h2 class="text-2xl font-bold mb-10 text-center"><i class="fa-solid fa-user px-2"></i>Daftar Akun</h2>
     @if ($errors->any())

@@ -9,8 +9,10 @@ use Illuminate\Http\Request;
 
 class LihatLaporanController extends Controller
 {
+    
     public function index()
     {
+        // dd(Auth::user()); // Untuk memastikan user sedang login
         // Ambil laporan milik user yang sedang login
         $laporans = Laporan::where('id_user', Auth::id())
             ->join('instansi', 'laporan.instansi', '=', 'instansi.id_instansi')

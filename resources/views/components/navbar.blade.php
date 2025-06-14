@@ -8,46 +8,49 @@
 
     <!-- Navigasi Desktop -->
     <ul class="hidden md:flex space-x-6">
-        <li><a href="{{ url('/') }}" class="text-white font-semibold hover:text-orange-400">BERANDA</a></li>
-        <li><a href="{{ url('/about') }}" class="text-white font-semibold hover:text-orange-400">TENTANG LAPOR.IN</a></li>
-        <li><a href="{{ url('/lapor') }}" class="text-white font-semibold hover:text-orange-400">LAPOR</a></li>
-        @if (session('is_login'))
-        <!-- Dropdown Profil -->
-        <div class="relative">
-            <button id="profile-toggle" class="text-white font-semibold hover:text-orange-400 flex items-center space-x-2">
-                PROFIL<i class="fa-solid fa-caret-down px-1"></i>
-            </button>
-            <div id="profile-dropdown" class="hidden absolute top-12 right-4 w-48 border-2 border-gray-600 bg-white shadow-md rounded-md z-50">
-                <a href="{{ url('/ubahprofil') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">Ubah Profil</a>
-                <a href="{{ url('/lihatlaporan') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">Lihat Laporan Saya</a>
-                <a href="{{ url('/halaman_donasi') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">Riwayat Donasi</a>
-                <a href="{{ url('/proseslogout') }}" class="block px-4 py-2 text-red-600 hover:bg-gray-200">Keluar</a>
-            </div>
-        </div>
-        @else
-        <a href="{{ url('/login') }}" class="text-white font-semibold hover:text-orange-400">MASUK</a>
-        <a href="{{ url('/register') }}" class="text-white font-semibold hover:text-orange-400">DAFTAR</a>
-        @endif
-    </ul>
-
-    <!-- Navigasi Mobile -->
-    <div class="md:hidden flex items-center space-x-4">
-        @if (session('is_login'))
-        <button id="profile-toggle-mobile" class="text-white font-semibold hover:text-orange-400 flex items-center space-x-2">
+    <li><a href="{{ url('/') }}" class="text-white font-semibold hover:text-orange-400">BERANDA</a></li>
+    <li><a href="{{ url('/about') }}" class="text-white font-semibold hover:text-orange-400">TENTANG LAPOR.IN</a></li>
+    <li><a href="{{ url('/lapor') }}" class="text-white font-semibold hover:text-orange-400">LAPOR</a></li>
+    
+    @auth
+    <!-- Dropdown Profil -->
+    <div class="relative">
+        <button id="profile-toggle" class="text-white font-semibold hover:text-orange-400 flex items-center space-x-2">
             PROFIL<i class="fa-solid fa-caret-down px-1"></i>
         </button>
-        <div id="profile-dropdown-mobile" class="hidden absolute top-16 right-4 w-48 border-2 border-gray-600 bg-white shadow-md rounded-md z-50">
+        <div id="profile-dropdown" class="hidden absolute top-12 right-4 w-48 border-2 border-gray-600 bg-white shadow-md rounded-md z-50">
             <a href="{{ url('/ubahprofil') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">Ubah Profil</a>
             <a href="{{ url('/lihatlaporan') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">Lihat Laporan Saya</a>
             <a href="{{ url('/halaman_donasi') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">Riwayat Donasi</a>
             <a href="{{ url('/proseslogout') }}" class="block px-4 py-2 text-red-600 hover:bg-gray-200">Keluar</a>
         </div>
-        @endif
-        
-        <button id="menu-toggle" class="md:hidden text-white text-2xl focus:outline-none">
-            ☰
-        </button>
     </div>
+    @else
+    <a href="{{ url('/login') }}" class="text-white font-semibold hover:text-orange-400">MASUK</a>
+    <a href="{{ url('/register') }}" class="text-white font-semibold hover:text-orange-400">DAFTAR</a>
+    @endauth
+</ul>
+
+
+    <!-- Navigasi Mobile -->
+<div class="md:hidden flex items-center space-x-4">
+    @auth
+    <button id="profile-toggle-mobile" class="text-white font-semibold hover:text-orange-400 flex items-center space-x-2">
+        PROFIL<i class="fa-solid fa-caret-down px-1"></i>
+    </button>
+    <div id="profile-dropdown-mobile" class="hidden absolute top-16 right-4 w-48 border-2 border-gray-600 bg-white shadow-md rounded-md z-50">
+        <a href="{{ url('/ubahprofil') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">Ubah Profil</a>
+        <a href="{{ url('/lihatlaporan') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">Lihat Laporan Saya</a>
+        <a href="{{ url('/halaman_donasi') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">Riwayat Donasi</a>
+        <a href="{{ url('/proseslogout') }}" class="block px-4 py-2 text-red-600 hover:bg-gray-200">Keluar</a>
+    </div>
+    @endauth
+
+    <button id="menu-toggle" class="md:hidden text-white text-2xl focus:outline-none">
+        ☰
+    </button>
+</div>
+
 </nav>
 
 <!-- Dropdown Menu Mobile -->
@@ -56,12 +59,13 @@
         <li><a href="{{ url('/') }}" class="block text-gray-600 font-semibold hover:text-orange-400">BERANDA</a></li>
         <li><a href="{{ url('/about') }}" class="block text-gray-600 font-semibold hover:text-orange-400">TENTANG</a></li>
         <li><a href="{{ url('/lapor') }}" class="block text-gray-600 font-semibold hover:text-orange-400">LAPOR</a></li>
-        @if (!session('is_login'))
+        @guest
         <li><a href="{{ url('/login') }}" class="block text-gray-600 font-semibold hover:text-orange-400">MASUK</a></li>
         <li><a href="{{ url('/register') }}" class="block text-gray-600 font-semibold hover:text-orange-400">DAFTAR</a></li>
-        @endif
+        @endguest
     </ul>
 </div>
+
 
 <!-- Script Dropdown -->
 <script>

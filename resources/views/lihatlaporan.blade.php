@@ -1,3 +1,7 @@
+{{-- <pre>
+    {{ print_r($laporans, true) }}
+</pre> --}}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,11 +9,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     @vite('resources/css/app.css')
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <title>Lihat laporan saya</title>
 </head>
 <body>
     @include('components.navbar')
-    @section('content')
+
     <div class="relative w-full h-[275px] overflow-hidden">
         
 
@@ -52,8 +58,8 @@
                             <div><strong>Privasi:</strong> {{ $laporan->privasi }}</div>
                             <div><strong>Lampiran:</strong>
                                 @if ($laporan->lampiran)
-                                <a href="{{ asset('storage/lampiran/' . $laporan->lampiran) }}" target="_blank" class="text-blue-600 underline">
-                                    Lihat Lampiran </a>
+                                <a href="javascript:void(0);" onclick="bukaModal('{{ asset('storage/' . $laporan->lampiran) }}')" class="text-blue-500 hover:underline font-medium">Lihat Gambar 📎</a>
+                                    </a>
                                     @else
     <span class="text-gray-500">Tidak ada lampiran</span>
 @endif
@@ -74,20 +80,73 @@
                             </span>
 
                             @if ($laporan->status === 'Pending')
-                                <form action="{{ route('lapor.delete', $laporan->id_laporan) }}" method="POST" onsubmit="return confirm('Laporan yang akan ditarik tidak bisa kembali?');">
+                                <form id="delete-form-{{ $laporan->id_laporan }}" action="{{ route('lapor.delete', $laporan->id_laporan) }}" method="POST" style="display: none;">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="bg-red-500 hover:bg-red-600 text-white text-sm font-semibold py-1 px-3 rounded transition">
-                                        Tarik laporan
-                                    </button>
                                 </form>
+                                <button
+                                onclick="confirmDelete({{ $laporan->id_laporan }})"
+                                class="bg-red-500 hover:bg-red-600 text-white text-sm font-semibold py-1 px-3 rounded transition">
+                                Tarik laporan
+                            </button>
+
                             @endif
                         </div>
                     </div>
+                    
                 @endforeach
             </div>
         </main>
     </div>
-@endsection
+<!-- Modal Lampiran -->
+<div id="lampiranModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+    <div class="bg-white rounded-lg shadow-lg p-4 max-w-2xl w-full relative">
+        <button onclick="tutupModal()" class="absolute top-2 right-3 text-gray-500 hover:text-gray-700 text-xl">&times;</button>
+        <div id="lampiranContent" class="text-center">
+            <!-- Isi lampiran akan dimuat di sini -->
+        </div>
+    </div>
+</div>
+
+<script>
+function bukaModal(url) {
+    const modal = document.getElementById('lampiranModal');
+    const content = document.getElementById('lampiranContent');
+
+    if (url.match(/\.(jpeg|jpg|png|gif)$/i)) {
+        content.innerHTML = `<img src="${url}" alt="Lampiran" class="mx-auto max-h-[500px] rounded">`;
+    } else if (url.match(/\.pdf$/i)) {
+        content.innerHTML = `<iframe src="${url}" class="w-full h-[500px]" frameborder="0"></iframe>`;
+    } else {
+        content.innerHTML = `<p class="text-red-600">Format file tidak didukung.</p>`;
+    }
+
+    modal.classList.remove('hidden');
+}
+
+function tutupModal() {
+    document.getElementById('lampiranModal').classList.add('hidden');
+    document.getElementById('lampiranContent').innerHTML = ''; // Kosongkan isi
+}
+</script>
+<script>
+    function confirmDelete(id) {
+        Swal.fire({
+            title: 'Tarik laporan?',
+            text: "Laporan yang ditarik tidak bisa dikembalikan!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Ya, tarik saja!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('delete-form-' + id).submit();
+            }
+        });
+    }
+</script>
+
 </body>
 </html>

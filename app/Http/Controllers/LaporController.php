@@ -31,12 +31,18 @@ class LaporController extends Controller
             'privasi' => 'nullable|in:Publik,Privat'
         ]);
 
-        // Ambil user ID dari session
-        $id_user = Session::get('id_user');
+        // // Ambil user ID dari session
+        // $id_user = Session::get('id_user');
 
-        if (!$id_user) {
+        // if (!$id_user) {
+        //     return redirect()->route('login')->withErrors(['login' => 'Silakan login terlebih dahulu.']);
+        // }
+
+        if (!Auth::check()) {
             return redirect()->route('login')->withErrors(['login' => 'Silakan login terlebih dahulu.']);
-        }
+}
+
+$id_user = Auth::user()->id_user;
 
         // Simpan file lampiran jika ada
         $lampiranPath = null;

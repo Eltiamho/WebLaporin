@@ -56,7 +56,7 @@
             <h1 class="text-5xl font-bold text-black">
                 {{-- Mengganti logika session dengan helper Auth Laravel --}}
                 @auth
-                    Selamat Datang {{ Auth::user()->nama }} di Lapor.In
+                    Selamat Datang {{ Auth::user()->username }} di Lapor.In
                 @else
                     Selamat Datang di Lapor.In
                 @endauth
