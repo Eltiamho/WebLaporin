@@ -1,4 +1,3 @@
-
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 <nav id="navbar" class="fixed top-0 left-0 w-full bg-gray-800 shadow-md p-4 flex justify-between items-center z-50 transition-all duration-300">
     <div class="flex items-center space-x-2">

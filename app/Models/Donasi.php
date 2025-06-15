@@ -16,7 +16,7 @@ class Donasi extends Model
     protected $keyType = 'int';
 
     protected $fillable = [
-         'id_laporan',
+        'id_laporan',
         'nama',
         'email',
         'jumlah',
