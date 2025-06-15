@@ -1,19 +1,17 @@
 <?php
 namespace App\Http\Middleware;
-
 use Closure;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 
 class IsAdmin
 {
     public function handle(Request $request, Closure $next)
     {
-        if (Auth::guard('admin')->check()) {
-            return $next($request);
+        if (!Auth::guard('admin')->check()) {
+            return redirect()->route('login')->withErrors('Akses hanya untuk admin');
         }
-
-        return redirect()->route('admin.login')->withErrors(['Anda harus login sebagai admin.']);
+        return $next($request);
     }
 }
 

@@ -26,5 +26,19 @@ class LaporanController extends Controller
 
         return view('laporan', compact('laporan'));
     }
+     public function ubahStatus(Request $request)
+    {
+        if ($request->has('status')) {
+            foreach ($request->status as $id_laporan => $status) {
+                DB::table('laporan')
+                    ->where('id_laporan', $id_laporan)
+                    ->update(['status' => $status]);
+            }
+
+            return redirect()->route('admin.daftarlaporin')->with('status', 'success');
+        } else {
+            return redirect()->route('admin.daftarlaporin')->with('status', 'error');
+        }
+    }
 }
 

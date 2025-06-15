@@ -31,12 +31,12 @@
                 </a>
             </li>
             <li>
-                <a href="{{ route('admin.laporin') }}" class="flex items-center gap-3 py-3 px-4 rounded-lg hover:text-orange-400 hover:bg-gray-700 transition-all">
+                <a href="{{ route('admin.daftarlaporin') }}" class="flex items-center gap-3 py-3 px-4 rounded-lg hover:text-orange-400 hover:bg-gray-700 transition-all">
                     <i class="fa-solid fa-pen-to-square"></i> Daftar Laporin
                 </a>
             </li>
             <li>
-                <a href="{{ route('admin.instansi') }}" class="flex items-center gap-3 py-3 px-4 rounded-lg hover:text-orange-400 hover:bg-gray-700 transition-all">
+                <a href="{{ route('admin.daftarinstansi') }}" class="flex items-center gap-3 py-3 px-4 rounded-lg hover:text-orange-400 hover:bg-gray-700 transition-all">
                     <i class="fa-solid fa-building"></i> Daftar Instansi
                 </a>
             </li>

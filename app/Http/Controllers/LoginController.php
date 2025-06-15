@@ -1,12 +1,10 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Admin;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
@@ -23,48 +21,35 @@ class LoginController extends Controller
             'password' => 'required',
         ]);
 
-        // Cek sebagai user
-        $user = User::where('email', strtolower($request->email))->first();
+        // Cek user
+        $user = User::where('email', $request->email)->first();
         if ($user && Hash::check($request->password, $user->password)) {
-            Auth::login($user); // Auth Laravel
-            session()->put('id_user', $user->id_user);
-            session()->put('nama', $user->nama);
-            session()->put('email', $user->email);
-            session()->put('role', 'user');
-
+            Auth::login($user);
             return redirect()->route('home');
+            
         }
 
-        // Cek sebagai admin
-        $admin = Admin::where('email', strtolower($request->email))->first();
+        // Cek admin
+        $admin = Admin::where('email', $request->email)->first();
         if ($admin && Hash::check($request->password, $admin->password)) {
-        Auth::guard('admin')->login($admin); // pakai guard 'admin'
-        return redirect()->route('admin.dashboard');
-        // return redirect()->route('dashboard');
-        // return redirect()->route('admin.dashboard');
-    }
-        // if ($admin && Hash::check($request->password, $admin->password)) {
-        //     session()->put('id_admin', $admin->id_admin);
-        //     session()->put('nama', $admin->nama);
-        //     session()->put('email', $admin->email);
-        //     session()->put('role', 'admin');
+            // Auth::login($admin);
+            Auth::guard('admin')->login($admin);
+            // return redirect()->route('admin.dashboard');
+            return redirect()->route('admin.dashboard');
 
-        //     return redirect()->route('admin.dashboard');
-        // }
+        }
 
-        return back()->withErrors(['login' => 'Email atau Password salah.']);
+        return back()->withErrors(['login' => 'Email atau password salah.']);
     }
 
     public function logout()
     {
-        Auth::guard('admin')->logout();
+        if (Auth::guard('admin')->check()) {
+            Auth::guard('admin')->logout();
+        } else {
+            Auth::logout();
+        }
         return redirect()->route('login');
     }
-
-    // public function logout()
-    // {
-    //     Session::flush();
-    //     Auth::logout();
-    //     return redirect()->route('login');
-    // }
 }
+
