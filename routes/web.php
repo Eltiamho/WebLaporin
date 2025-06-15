@@ -33,11 +33,28 @@ Route::middleware(['is_admin'])->group(function () {
     Route::get('/admin/profil-user', [AdminController::class, 'profilUser'])->name('admin.profiluser');
     Route::post('/admin/ubah-status-user', [AdminController::class, 'ubahStatusUser'])->name('admin.ubahstatususer');
     Route::post('/admin/proses-hapus-admin', [AdminController::class, 'hapusAdminDenganPassword'])->name('admin.hapusadmin.post');
+    Route::get('/admin/tambah', [AdminController::class, 'create'])->name('admin.create');
+    Route::post('/admin/tambah', [AdminController::class, 'store'])->name('admin.store');
+    Route::get('/admin/edit/{id}', [AdminController::class, 'edit'])->name('admin.edit');
+    Route::put('/admin/update/{id}', [AdminController::class, 'update'])->name('admin.update');
+    Route::delete('/admin/hapus/{id}', [AdminController::class, 'destroy'])->name('admin.destroy');
+
+    Route::get('/admin/profiluser', [AdminController::class, 'profilUser'])->name('admin.profiluser');
+Route::post('/admin/ubahstatususer', [AdminController::class, 'ubahStatusUser'])->name('admin.ubahstatususer');
+
+
+
     Route::get('/admin/daftarlaporin', [AdminController::class, 'daftarLaporin'])->name('admin.daftarlaporin');
     Route::get('/admin/daftarinstansi', [AdminController::class, 'daftarInstansi'])->name('admin.daftarinstansi');
-    
-Route::post('/admin/tambah', [AdminController::class, 'store'])->name('admin.store');
-Route::post('/admin/update/{id}', [AdminController::class, 'update'])->name('admin.update');
+    Route::post('/admin/ubah-instansi', [AdminController::class, 'ubahInstansi'])->name('admin.ubahinstansi');
+    Route::get('/admin/edit-instansi/{id}', [AdminController::class, 'editInstansi'])->name('admin.editinstansi');
+    Route::get('/admin/daftar-instansi', [AdminController::class, 'daftarInstansi'])->name('admin.daftarin_stansi');
+    Route::post('/admin/prosesubahstatusinstansi', [AdminController::class, 'ubahStatusInstansi'])->name('admin.ubahstatusinstansi');
+
+
+    // Tambah instansi
+Route::get('/admin/tambahinstansi', [AdminController::class, 'tambahInstansi'])->name('admin.tambahinstansi');
+Route::post('/admin/tambahinstansi', [AdminController::class, 'storeInstansi'])->name('admin.storeinstansi');
 });
 // Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 // Route::post('/login', [LoginController::class, 'login'])->name('login.submit');

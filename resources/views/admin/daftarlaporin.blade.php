@@ -19,7 +19,7 @@
             <table class="w-full min-w-full text-sm text-left border border-orange-700">
                 <thead class="bg-orange-700 text-white text-base">
                     <tr>
-                        <th class="px-4 py-4">ID</th>
+                        <th class="px-4 py-4">ID Laporan</th>
                         <th class="px py-4">User</th>
                         
                         <th class="px-4 py-4">Judul</th>
@@ -38,7 +38,7 @@
                         <tr class="hover:bg-orange-100 transition-all">
                             <td class="px-4 py-4">{{ $data->id_laporan }}</td>
 
-                            <td class="px-4 py-4">{{ $data->privasi == 'publik' ? $data->username : '-' }}</td>
+                            <td class="px-4 py-4">{{ $data->privasi === 'Publik' ? $data->username : '-' }}</td>
                             <td class="px-4 py-4">{{ $data->judul }}</td>
                             <td class="px-4 py-4 break-words whitespace-normal">{{ $data->isi }}</td>
                             <td class="px-4 py-4">{{ $data->tanggal }}</td>

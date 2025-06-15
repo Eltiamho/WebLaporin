@@ -45,7 +45,7 @@
                                 </select>
                             </td>
                             <td class="px-6 py-4 flex space-x-2">
-                                <a href="{{ url('/admin/ubahinstansi/'.$data->id_instansi) }}" 
+                                <a href="{{ route('admin.editinstansi', $data->id_instansi) }}" 
                                     class="bg-yellow-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-yellow-600">
                                     <i class="fa-regular fa-pen-to-square"></i> Edit 
                                 </a>
