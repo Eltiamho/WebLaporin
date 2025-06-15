@@ -16,35 +16,36 @@
         <table id="donasiTable" class="min-w-full text-sm divide-y divide-gray-200">
             <thead class="bg-gray-100 text-gray-700">
                 <tr class="text-center">
-                    <th>No</th>
-                    <th>Nama Donatur</th>
-                    <th>Judul Laporan</th>
-                    <th>Nominal</th>
-                    <th>Pesan</th>
-                    <th>Tanggal</th>
+                    <th class="py-3">No</th>
+                    <th class="py-3">Nama Donatur</th>
+                    <th class="py-3">Judul Laporan</th>
+                    <th class="py-3">Nominal</th>
+                    <th class="py-3">Pesan</th>
+                    <th class="py-3">Tanggal</th>
                 </tr>
             </thead>
             <tbody class="text-center text-gray-600">
                 @forelse ($donasi as $no => $row)
                     <tr class="border-b hover:bg-gray-50">
-                        <td>{{ $no + 1 }}</td>
-                        <td class="font-semibold">{{ $row->nama }}</td>
-                        <td>{{ $row->judul }}</td>
-                        <td>
+                        <td class="py-3">{{ $no + 1 }}</td>
+                        <td class="py-3 font-semibold">{{ $row->nama }}</td>
+                        <td class="py-3">{{ $row->judul }}</td>
+                        <td class="py-3">
                             <span class="inline-block bg-green-100 text-green-800 text-xs sm:text-sm px-2 py-1 rounded">
                                 Rp {{ number_format($row->jumlah, 0, ',', '.') }}
                             </span>
                         </td>
-                        <td class="italic">{{ $row->pesan }}</td>
-                        <td>{{ \Carbon\Carbon::parse($row->tanggal)->format('d M Y') }}</td>
+                        <td class="py-3 italic">{{ $row->pesan }}</td>
+                        <td class="py-3">{{ \Carbon\Carbon::parse($row->tanggal)->format('d M Y') }}</td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="6" class="text-center text-gray-500">Belum ada donasi.</td>
+                        <td colspan="6" class="py-6 text-center text-gray-500">Belum ada donasi.</td>
                     </tr>
                 @endforelse
             </tbody>
         </table>
+
 
         <div class="flex flex-col sm:flex-row justify-between items-center mt-6 gap-4">
             <a href="{{ route('lapor') }}" class="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition text-center">

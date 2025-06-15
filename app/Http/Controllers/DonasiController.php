@@ -15,31 +15,55 @@ class DonasiController extends Controller
     public function form($id_laporan)
     {
         $laporan = Laporan::find($id_laporan);
-        // Ambil email user yang sedang login
-    $email = Auth::check() ? Auth::user()->email : '';
-
+        $email = Auth::check() ? Auth::user()->email : '';
+    
         if (!$laporan) {
             abort(404, 'Laporan tidak ditemukan.');
         }
-
-        // $email = session('username'); // atau auth()->user()->email jika pakai Laravel Auth
-
-        return view('form_donasi', compact('laporan', 'email'));
+    
+        // Ambil total donasi dan daftar donatur terbaru
+        $total_donasi = Donasi::where('id_laporan', $id_laporan)->sum('jumlah');
+    
+        $daftar_donatur = Donasi::where('id_laporan', $id_laporan)
+                            ->orderByDesc('tanggal')
+                            ->take(10)
+                            ->get();
+    
+        return view('form_donasi', compact('laporan', 'email', 'total_donasi', 'daftar_donatur'));
     }
+    
     
 
     public function proses(Request $request)
     {
+        // Hilangkan titik pemisah ribuan
+        $request->merge([
+            'jumlah' => str_replace('.', '', $request->jumlah)
+        ]);
+    
         $request->validate([
             'id_laporan' => 'required|exists:laporan,id_laporan',
-            'nama'       => 'required|string|max:255',
+            'nama'       => 'nullable|string|max:255',
             'email'      => 'required|email',
-            'jumlah'     => 'required|numeric|min:1000',
+            'jumlah'     => 'required|numeric|min:1000|max:5000000',
             'pesan'      => 'nullable|string|max:1000',
+        ], [
+            'jumlah.min' => 'Jumlah donasi minimal adalah Rp 1.000.',
+            'jumlah.max' => 'Jumlah donasi maksimal adalah Rp 5.000.000.',
         ]);
-
-        Donasi::create($request->all());
-
+        
+        $nama = $request->nama ?: 'Anonymous';
+        $pesan = $request->pesan ?: '-';
+        Donasi::create([
+            'id_laporan' => $request->id_laporan,
+            'nama'       => $nama,
+            'email'      => $request->email,
+            'jumlah'     => $request->jumlah,
+            'pesan'      => $pesan,
+            'tanggal'    => now(),
+        ]);
+        
+    
         return redirect()->route('form_donasi', ['id_laporan' => $request->id_laporan])
                          ->with('success', 'Donasi berhasil dikirim!');
     }

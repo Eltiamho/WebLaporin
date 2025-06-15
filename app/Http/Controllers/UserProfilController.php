@@ -1,9 +1,10 @@
 <?php
 namespace App\Http\Controllers;
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+
 
 class UserProfilController extends Controller
 {
@@ -33,6 +34,33 @@ class UserProfilController extends Controller
 
         return redirect()->route('user.edit')->with('success', 'Profil berhasil diperbarui.');
     }
+    public function updatePassword(Request $request)
+    {
+        $request->validate([
+            'password_lama' => 'required',
+            'password_baru' => 'required|min:6',
+            'password_konfirmasi' => 'required|same:password_baru',
+        ], [
+            'password_lama.required' => 'Password lama harus diisi.',
+            'password_baru.required' => 'Password baru harus diisi.',
+            'password_baru.min' => 'Password baru minimal harus terdiri dari 6 karakter.',
+            'password_konfirmasi.required' => 'Konfirmasi password harus diisi.',
+            'password_konfirmasi.same' => 'Password baru dan konfirmasi password tidak cocok.',
+        ]);
+        
+
+        $user = Auth::user();
+
+        if (!Hash::check($request->password_lama, $user->password)) {
+            return back()->withErrors(['password_lama' => 'Password lama salah.']);
+        }
+
+        $user->password = Hash::make($request->password_baru);
+        $user->save();
+
+        return back()->with('success', 'Password berhasil diubah.');
+    }
+
 }
 
 

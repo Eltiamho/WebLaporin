@@ -88,29 +88,48 @@ $id_user = Auth::user()->id_user;
         'Content-Disposition' => 'inline', // atau 'attachment' jika ingin force download
     ]);
 }
+public function ubahStatus(Request $request)
+{
+    try {
+        foreach ($request->status as $id_laporan => $status) {
+            DB::table('laporan')->where('id_laporan', $id_laporan)->update([
+                'status' => $status
+            ]);
+        }
+        return redirect()->back()->with('status', 'success');
+    } catch (\Exception $e) {
+        \Log::error('Gagal mengubah status: ' . $e->getMessage());
+        return redirect()->back()->with('status', 'error');
+    }
+}
 
     public function index(Request $request)
-{
-    $kategori = $request->query('kategori');
-    $instansi = $request->query('instansi');
-
-    $lapor = DB::table('laporan')
-        ->leftJoin('user', 'laporan.id_user', '=', 'user.id_user')
-        ->leftJoin('instansi', 'laporan.instansi', '=', 'instansi.id_instansi')
-        ->select('laporan.*', 'user.username', 'instansi.nama_instansi');
-
-    if (!empty($kategori)) {
-        $lapor->where('laporan.kategori', $kategori);
+    {
+        $kategori = $request->query('kategori');
+        $instansi = $request->query('instansi');
+    
+        $lapor = DB::table('laporan')
+            ->leftJoin('user', 'laporan.id_user', '=', 'user.id_user')
+            ->leftJoin('instansi', 'laporan.instansi', '=', 'instansi.id_instansi')
+            ->leftJoin('donasi', 'laporan.id_laporan', '=', 'donasi.id_laporan') // JOIN donasi
+            ->select(
+                'laporan.*',
+                'user.username',
+                'instansi.nama_instansi',
+                DB::raw('SUM(donasi.jumlah) as total_donasi')
+            )
+            ->groupBy('laporan.id_laporan', 'user.username', 'instansi.nama_instansi');
+    
+        if (!empty($kategori)) {
+            $lapor->where('laporan.kategori', $kategori);
+        }
+    
+        if (!empty($instansi)) {
+            $lapor->where('instansi.nama_instansi', $instansi);
+        }
+    
+        $lapor = $lapor->orderBy('laporan.id_laporan', 'desc')->get();
+    
+        return view('lapor', ['lapor' => $lapor]);
     }
-
-    if (!empty($instansi)) {
-        $lapor->where('instansi.nama_instansi', $instansi);
-    }
-
-    $lapor = $lapor->orderBy('laporan.id_laporan', 'desc')->get();
-
-    return view('lapor', ['lapor' => $lapor]);
 }
-}
-
-

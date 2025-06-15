@@ -16,19 +16,16 @@
 <body>
     @include('components.navbar')
 
-    <div class="relative w-full h-[275px] overflow-hidden">
-        
-
+    <div class="relative w-full h-[220px] overflow-hidden">
         <section class="relative bg-cover bg-center text-white py-10 mt-16 text-center flex" style="background-image: url('{{ asset('assets/bg about.png') }}');">
             <div class="absolute inset-0 bg-black bg-opacity-50"></div>
             <div class="relative px-10 flex items-center gap-4">
-                <img src="{{ asset('profile-pic.jpg') }}" alt="Profile Picture" class="w-24 h-24 rounded-full border-2 border-white">
                 <h1 class="text-3xl font-bold text-white">Profil</h1>
             </div>
         </section>
     </div>
     
-    <div class="container flex px-4 md:px-8 py-5">
+    <div class="container flex md:px-8 ">
         <main class="w-full bg-white p-6 rounded-lg shadow-md">
             <h2 class="text-lg font-semibold mb-4">Daftar Laporan Saya</h2>
             <div class="space-y-4">

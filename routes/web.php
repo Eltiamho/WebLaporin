@@ -16,19 +16,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\UserProfilController;
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\DonasiController;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\LupaPasswordController;
-use App\Http\Controllers\InstansiController;
-use App\Http\Controllers\LaporanController;
-
-
-Route::get('/hapusinstansi/{id}', [InstansiController::class, 'destroy'])->name('instansi.hapus');
-
-Route::get('/lupapassword', function () {
-    return view('lupapassword');
-})->name('lupapassword.form');
-
-Route::post('/lupapassword', [LupaPasswordController::class, 'resetPassword'])->name('lupapassword.reset');
 
 
 /*
@@ -83,9 +71,21 @@ Route::get('/lampiran/{id}', [LaporController::class, 'lihatLampiran'])->name('l
 Route::middleware(['auth'])->group(function () {
     Route::get('/ubahprofil', [UserProfilController::class, 'edit'])->name('user.edit');
     Route::post('/ubahprofil', [UserProfilController::class, 'update'])->name('user.update');
+   
+
 });
+Route::get('/lupapassword', [LupaPasswordController::class, 'showEmailForm'])->name('lupapassword.form');
+Route::post('/lupapassword/send', [LupaPasswordController::class, 'sendVerification'])->name('lupapassword.verify.send');
+Route::get('/lupapassword/verify', [LupaPasswordController::class, 'showVerifyForm'])->name('verifyform');
+Route::post('/lupapassword/verify', [LupaPasswordController::class, 'verifyCode'])->name('lupapassword.verifycode');
+Route::get('/lupapassword/reset', [LupaPasswordController::class, 'showResetForm'])->name('lupapassword.resetform');
+Route::post('/lupapassword/reset', [LupaPasswordController::class, 'resetPassword'])->name('lupapassword.reset');
 
-
+/*
+|--------------------------------------------------------------------------
+| Pelaporan (Hanya untuk user yang login)
+|--------------------------------------------------------------------------
+*/
 Route::middleware(['auth'])->group(function () {
     Route::get('/lapor', [LaporController::class, 'index'])->name('lapor');
     Route::post('/lapor/store', [LaporController::class, 'store'])->name('lapor.store');
@@ -125,5 +125,6 @@ Route::middleware(['is_admin'])->group(function () {
     Route::post('/admin/tambahinstansi', [AdminController::class, 'storeInstansi'])->name('admin.storeinstansi');
 
     // Status Laporan
-    Route::post('/admin/ubah-status-laporan', [LaporanController::class, 'ubahStatus'])->name('admin.ubahstatuslaporan');
+    Route::post('/admin/ubahstatuslaporan', [LaporController::class, 'ubahStatus'])->name('admin.ubahstatuslaporan');
+
 });
