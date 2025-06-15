@@ -14,6 +14,23 @@ use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\LampiranController;
 use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Session;
+use App\Http\Controllers\UserProfilController;
+use App\Http\Controllers\AboutController;
+use App\Http\Controllers\DonasiController;
+
+Route::get('/form_donasi/{id_laporan}', [DonasiController::class, 'form'])->name('form_donasi');
+Route::post('/proses_donasi', [DonasiController::class, 'proses'])->name('proses_donasi');
+Route::get('/riwayat_donasi', [DonasiController::class, 'riwayat'])->middleware('auth')->name('riwayat_donasi');
+
+
+
+Route::get('/about', [\App\Http\Controllers\AboutController::class, 'index'])->name('about');
+
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/ubahprofil', [UserProfilController::class, 'edit'])->name('user.edit');
+    Route::post('/ubahprofil', [UserProfilController::class, 'update'])->name('user.update');
+});
 
 Route::get('/lampiran/{id}', [LampiranController::class, 'view'])->name('lampiran.view');
 

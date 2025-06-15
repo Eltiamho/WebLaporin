@@ -10,11 +10,13 @@ class Donasi extends Model
     use HasFactory;
 
     protected $table = 'donasi';
+    public $timestamps = false; // tambahkan ini
     protected $primaryKey = 'id';
     public $incrementing = true;
     protected $keyType = 'int';
 
     protected $fillable = [
+         'id_laporan',
         'nama',
         'email',
         'jumlah',

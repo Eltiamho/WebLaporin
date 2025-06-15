@@ -21,7 +21,7 @@
         <div id="profile-dropdown" class="hidden absolute top-12 right-4 w-48 border-2 border-gray-600 bg-white shadow-md rounded-md z-50">
             <a href="{{ url('/ubahprofil') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">Ubah Profil</a>
             <a href="{{ url('/lihatlaporan') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">Lihat Laporan Saya</a>
-            <a href="{{ url('/halaman_donasi') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">Riwayat Donasi</a>
+            <a href="{{ route('riwayat_donasi') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">Riwayat Donasi</a>
             <a href="{{ url('/proseslogout') }}" class="block px-4 py-2 text-red-600 hover:bg-gray-200">Keluar</a>
         </div>
     </div>

@@ -12,7 +12,7 @@
     {{-- <h1 class="text-3xl font-bold underline">
     Hello world!
   </h1> --}}
-  <div class="relative w-full h-[400px] overflow-hidden">
+  <div class="relative w-full h-[400px] overflow-hidden mt-16">
         <!-- Slides -->
         <div class="relative w-full h-full">
             <div class="slide fade absolute w-full h-full">

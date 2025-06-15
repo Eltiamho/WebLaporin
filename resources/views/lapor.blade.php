@@ -72,7 +72,7 @@
 
                     @if ($isActiveDonasi)
                         <div class="mt-4">
-                            @if (session()->has('id_user'))
+                            {{-- @if (session()->has('id_user'))
                                 <a href="{{ url('form_donasi?id_laporan=' . $row->id_laporan) }}" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-200">
                                     🎗️ Donasi Sekarang
                                 </a>
@@ -80,7 +80,14 @@
                                 <a href="{{ route('login') }}" class="bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-200">
                                     🔒 Login untuk Donasi
                                 </a>
-                            @endif
+                            @endif --}}
+                            @auth
+                            <a href="{{ route('form_donasi', ['id_laporan' => $row->id_laporan]) }}" class="btn-donasi bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-200">
+                                Donasi Sekarang sebagai {{ Auth::user()->username }}
+                            </a>
+                            @else
+                            <a href="{{ url('/login') }}" class="bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-200 btn-donasi">🔒 Silakan login untuk donasi</a>
+                            @endauth
                         </div>
                     @endif
                 </div>
