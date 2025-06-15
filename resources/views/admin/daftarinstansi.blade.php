@@ -49,11 +49,13 @@
                                     class="bg-yellow-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-yellow-600">
                                     <i class="fa-regular fa-pen-to-square"></i> Edit 
                                 </a>
-                                <a href="{{ url('/admin/hapusinstansi/'.$data->id_instansi) }}"  
+                                <a href="{{ route('instansi.hapus', ['id' => $data->id_instansi]) }}"  
                                     class="bg-red-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-red-600"
                                     onclick="return confirm('Apakah Anda yakin ingin menghapus instansi ini?')">
                                     <i class="fa-solid fa-trash"></i> Hapus
                                 </a>
+                                {{-- <a href="{{ route('instansi.hapus', ['id' => $instansi->id_instansi]) }}" onclick="return confirm('Yakin ingin menghapus?')" class="text-red-500">Hapus</a> --}}
+
                             </td>
                         </tr>
                         @endforeach

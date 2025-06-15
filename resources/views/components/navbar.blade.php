@@ -22,7 +22,11 @@
             <a href="{{ url('/ubahprofil') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">Ubah Profil</a>
             <a href="{{ url('/lihatlaporan') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">Lihat Laporan Saya</a>
             <a href="{{ route('riwayat_donasi') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">Riwayat Donasi</a>
-            <a href="{{ url('/proseslogout') }}" class="block px-4 py-2 text-red-600 hover:bg-gray-200">Keluar</a>
+            {{-- <a href="{{ url('/proseslogout') }}" class="block px-4 py-2 text-red-600 hover:bg-gray-200">Keluar</a> --}}
+            <form method="POST" action="{{ route('logout') }}">
+    @csrf
+    <button type="submit" class="block w-full text-left px-4 py-2 text-red-600 hover:bg-gray-200">Keluar</button>
+</form>
         </div>
     </div>
     @else
@@ -42,7 +46,11 @@
         <a href="{{ url('/ubahprofil') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">Ubah Profil</a>
         <a href="{{ url('/lihatlaporan') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">Lihat Laporan Saya</a>
         <a href="{{ url('/halaman_donasi') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">Riwayat Donasi</a>
-        <a href="{{ url('/proseslogout') }}" class="block px-4 py-2 text-red-600 hover:bg-gray-200">Keluar</a>
+        {{-- <a href="{{ url('/proseslogout') }}" class="block px-4 py-2 text-red-600 hover:bg-gray-200">Keluar</a> --}}
+        <form method="POST" action="{{ route('logout') }}">
+    @csrf
+    <button type="submit" class="block w-full text-left px-4 py-2 text-red-600 hover:bg-gray-200">Keluar</button>
+</form>
     </div>
     @endauth
 
