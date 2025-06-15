@@ -64,20 +64,20 @@ class AdminController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        return redirect()->route('admin.profiladmin')->with('success', 'Admin berhasil ditambahkan');
+        // return redirect()->route('admin.profiladmin')->with('success', 'Admin berhasil ditambahkan');
+        return redirect()->route('admin.index');
     }
 
     public function edit($id)
     {
         $admin = Admin::findOrFail($id);
-        return view('admin.ubah', compact('admin'));
+        return view('admin.edit', compact('admin'));
     }
-
+    
     public function update(Request $request, $id)
     {
         $admin = Admin::findOrFail($id);
 
-        // Validasi input
         $request->validate([
             'nama' => 'required|string|max:255',
             'old_password' => 'required',
@@ -149,40 +149,62 @@ public function storeInstansi(Request $request)
 
     return redirect()->route('admin.daftarin_stansi')->with('success', 'Instansi berhasil ditambahkan.');
 }
-
-
     public function editInstansi($id)
-    {
-        $instansi = DB::table('instansi')->where('id_instansi', $id)->first();
+{
+    $instansi = Instansi::findOrFail($id);
+    return view('admin.editinstansi', compact('instansi'));
+}
 
-        if (!$instansi) {
-            return redirect()->route('admin.daftarin_stansi')->with('error', 'Instansi tidak ditemukan!');
-        }
 
-        return view('admin.editinstansi', compact('instansi'));
-    }
+
+    // public function editInstansi($id)
+    // {
+    //     $instansi = DB::table('instansi')->where('id_instansi', $id)->first();
+
+    //     if (!$instansi) {
+    //         return redirect()->route('admin.daftarin_stansi')->with('error', 'Instansi tidak ditemukan!');
+    //     }
+
+    //     return view('admin.editinstansi', compact('instansi'));
+    // }
 
     public function ubahInstansi(Request $request)
-    {
-        $validated = $request->validate([
-            'id_instansi' => 'required|exists:instansi,id_instansi',
-            'nama_instansi' => 'required|string|max:255',
-            'Kontak' => 'required|string|max:255',
-        ]);
+{
+    $request->validate([
+        'id_instansi' => 'required|integer|exists:instansi,id_instansi',
+        'nama_instansi' => 'required|string|max:255',
+        'kontak' => 'required|string|max:255',
+    ]);
 
-        $update = DB::table('instansi')
-            ->where('id_instansi', $validated['id_instansi'])
-            ->update([
-                'nama_instansi' => $validated['nama_instansi'],
-                'Kontak' => $validated['Kontak'], // ✅ Perhatikan huruf K besar
-            ]);
+    $instansi = Instansi::findOrFail($request->id_instansi);
+    $instansi->nama_instansi = $request->nama_instansi;
+    $instansi->Kontak = $request->kontak;
+    $instansi->save();
 
-        if ($update) {
-            return redirect()->route('admin.daftarin_stansi')->with('success', 'Data instansi berhasil diperbarui.');
-        } else {
-            return back()->with('error', 'Gagal memperbarui data instansi.');
-        }
-    }
+    return redirect()->route('admin.daftarinstansi')->with('success', 'Instansi berhasil diperbarui.');
+}
+
+    // public function ubahInstansi(Request $request)
+    // {
+    //     $validated = $request->validate([
+    //         'id_instansi' => 'required|exists:instansi,id_instansi',
+    //         'nama_instansi' => 'required|string|max:255',
+    //         'Kontak' => 'required|string|max:255',
+    //     ]);
+
+    //     $update = DB::table('instansi')
+    //         ->where('id_instansi', $validated['id_instansi'])
+    //         ->update([
+    //             'nama_instansi' => $validated['nama_instansi'],
+    //             'Kontak' => $validated['Kontak'], // ✅ Perhatikan huruf K besar
+    //         ]);
+
+    //     if ($update) {
+    //         return redirect()->route('admin.daftarin_stansi')->with('success', 'Data instansi berhasil diperbarui.');
+    //     } else {
+    //         return back()->with('error', 'Gagal memperbarui data instansi.');
+    //     }
+    // }
 
     public function daftarLaporin()
     {

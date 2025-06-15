@@ -25,9 +25,9 @@
                 <input type="password" name="password" class="border w-full text-base px-2 py-1 focus:outline-none focus:ring-0 focus:border-gray-600" placeholder="Masukkan Password..." required />
             </div>
 
-            <div class="mt-3 text-gray-500">
+            {{-- <div class="mt-3 text-gray-500">
                 <input type="checkbox" onclick="togglePassword()"> Show password
-            </div>
+            </div> --}}
 
             <div class="mt-5">
                 @if($errors->has('login'))
@@ -37,7 +37,11 @@
             </div>
 
             <div class="mt-2">
-                <a href="javascript:void(0);" onclick="forgotpass()" class="underline italic font-semibold cursor-pointer">Lupa password?</a>
+                {{-- <a href="javascript:void(0);" onclick="forgotpass()" class="underline italic font-semibold cursor-pointer">Lupa password?</a> --}}
+                <div class="mt-2">
+    <a href="{{ route('lupapassword.form') }}" class="text-sm text-blue-600 hover:underline">Lupa Password?</a>
+</div>
+
             </div>
         </form>
     </div>
@@ -47,7 +51,15 @@
 <div id="lupapassform" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
     <div class="bg-white p-6 rounded-lg shadow-lg w-1/3">
         <h2 class="text-lg font-semibold mb-4 text-red-600">Ubah Password</h2>
-        <form action="{{ route('password.update') }}" method="POST">
+
+        @if(session('success'))
+            <div class="text-green-600 mb-2">{{ session('success') }}</div>
+        @endif
+        @if(session('error'))
+            <div class="text-red-600 mb-2">{{ session('error') }}</div>
+        @endif
+
+        <form action="{{ route('lupapassword.reset') }}" method="POST">
             @csrf
             <div class="mb-4">
                 <label class="block text-sm font-semibold">Email</label>
@@ -55,13 +67,13 @@
             </div>
             <div class="mb-4">
                 <label class="block text-sm font-semibold">Password baru</label>
-                <input type="password" name="pass_new" class="w-full p-2 border border-gray-300 rounded" required>
+                <input type="password" id="pass1" name="pass_new" class="w-full p-2 border border-gray-300 rounded" required>
             </div>
 
             <div class="mb-4">
                 <label class="block text-sm font-semibold">Konfirmasi password</label>
-                <input type="password" name="pass_conf" class="w-full p-2 border border-gray-300 rounded" required>
-                <input type="checkbox" onclick="togglePassword2()"> Show password
+                <input type="password" id="pass2" name="pass_conf" class="w-full p-2 border border-gray-300 rounded" required>
+                <label><input type="checkbox" onclick="togglePassword2()"> Show password</label>
             </div>
 
             <div class="flex justify-end gap-2">
@@ -70,21 +82,26 @@
             </div>
         </form>
     </div>
-    <script>
-        function togglePassword2() {
-            var pass1 = document.getElementById("pass1");
-            var pass2 = document.getElementById("pass2");
-
-            if (pass1.type === "password" && pass2.type === "password") {
-                pass1.type = "text";
-                pass2.type = "text";
-            } else {
-                pass1.type = "password";
-                pass2.type = "password";
-            }
-        }
-    </script>
 </div>
+
+<script>
+    function togglePassword2() {
+        const pass1 = document.getElementById("pass1");
+        const pass2 = document.getElementById("pass2");
+        const type = pass1.type === "password" ? "text" : "password";
+        pass1.type = type;
+        pass2.type = type;
+    }
+
+    function closeForm() {
+        document.getElementById('lupapassform').classList.add('hidden');
+    }
+
+    function openForm() {
+        document.getElementById('lupapassform').classList.remove('hidden');
+    }
+</script>
+
 
 </body>
 </html>

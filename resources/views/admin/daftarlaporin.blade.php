@@ -47,11 +47,12 @@
                             <td class="px-4 py-4">{{ $data->kategori }}</td>
                             <td class="px-4 py-4">
                                 @if (!empty($data->lampiran))
-                                    <a href="{{ url('lihat_lampiran.php?id=' . $data->id_laporan) }}" target="_blank" class="text-blue-700 underline">Lihat Lampiran</a>
+                                <a href="javascript:void(0);" onclick="bukaModal('{{ asset('storage/' . $data->lampiran) }}')" class="text-blue-700 hover:underline font-medium">Lihat 📎</a>
                                 @else
-                                    <span class="text-gray-500">Tidak ada lampiran</span>
+                                <span class="text-gray-500">Tidak ada lampiran</span>
                                 @endif
                             </td>
+
                             <td class="px-4 py-4">
                                 {!! $data->privasi == 'Publik' 
                                     ? '<span class="text-green-600 font-semibold">Publik</span>' 
@@ -89,5 +90,37 @@
         </div>
     </div>
 </form>
+<!-- Modal Lampiran -->
+<div id="lampiranModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+    <div class="bg-white rounded-lg shadow-lg p-4 max-w-2xl w-full relative">
+        <button onclick="tutupModal()" class="absolute top-2 right-3 text-gray-500 hover:text-gray-700 text-xl">&times;</button>
+        <div id="lampiranContent" class="text-center">
+            <!-- Isi lampiran akan dimuat di sini -->
+        </div>
+    </div>
+</div>
+
+<script>
+function bukaModal(url) {
+    const modal = document.getElementById('lampiranModal');
+    const content = document.getElementById('lampiranContent');
+
+    if (url.match(/\.(jpeg|jpg|png|gif)$/i)) {
+        content.innerHTML = `<img src="${url}" alt="Lampiran" class="mx-auto max-h-[500px] rounded">`;
+    } else if (url.match(/\.pdf$/i)) {
+        content.innerHTML = `<iframe src="${url}" class="w-full h-[500px]" frameborder="0"></iframe>`;
+    } else {
+        content.innerHTML = `<p class="text-red-600">Format file tidak didukung.</p>`;
+    }
+
+    modal.classList.remove('hidden');
+}
+
+function tutupModal() {
+    document.getElementById('lampiranModal').classList.add('hidden');
+    document.getElementById('lampiranContent').innerHTML = ''; // Kosongkan isi
+}
+</script>
+
 </body>
 </html>

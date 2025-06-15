@@ -13,6 +13,7 @@ class Instansi extends Model
     protected $primaryKey = 'id_instansi';
     public $incrementing = true;
     protected $keyType = 'int';
+    public $timestamps = false;
 
     protected $fillable = [
         'nama_instansi',

@@ -16,6 +16,20 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\UserProfilController;
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\DonasiController;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\LupaPasswordController;
+use App\Http\Controllers\InstansiController;
+use App\Http\Controllers\LaporanController;
+
+
+Route::get('/hapusinstansi/{id}', [InstansiController::class, 'destroy'])->name('instansi.hapus');
+
+Route::get('/lupapassword', function () {
+    return view('lupapassword');
+})->name('lupapassword.form');
+
+Route::post('/lupapassword', [LupaPasswordController::class, 'resetPassword'])->name('lupapassword.reset');
+
 
 /*
 |--------------------------------------------------------------------------
@@ -71,11 +85,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/ubahprofil', [UserProfilController::class, 'update'])->name('user.update');
 });
 
-/*
-|--------------------------------------------------------------------------
-| Pelaporan (Hanya untuk user yang login)
-|--------------------------------------------------------------------------
-*/
+
 Route::middleware(['auth'])->group(function () {
     Route::get('/lapor', [LaporController::class, 'index'])->name('lapor');
     Route::post('/lapor/store', [LaporController::class, 'store'])->name('lapor.store');
