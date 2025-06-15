@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\Admin;
 use App\Models\User;
 use App\Models\Instansi;
+use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller
 {
@@ -28,21 +29,39 @@ class AdminController extends Controller
 
     public function create()
     {
-        return view('admin.create');
+        return view('admin.tambah');
     }
 
     public function store(Request $request)
     {
         $request->validate([
             'nama' => 'required|string|max:255',
-            'email' => 'required|email|unique:admin,email',
-            'password' => 'required|string|min:6',
+            'email' => 'required|email',
+            'password' => 'required|string|confirmed',
+            'admin_verification' => 'required|string',
         ]);
 
+        // Cek apakah email sudah terdaftar di admin
+        if (Admin::where('email', strtolower($request->email))->exists()) {
+            return back()->withInput()->with('add_error', 'Email sudah terdaftar sebagai admin.');
+        }
+
+        // Cek apakah email sudah terdaftar di user
+        if (User::where('email', strtolower($request->email))->exists()) {
+            return back()->withInput()->with('add_error', 'Email sudah terdaftar sebagai user.');
+        }
+
+        // Verifikasi password admin yang login
+        $loggedInAdmin = Auth::guard('admin')->user();
+        if (!$loggedInAdmin || !Hash::check($request->admin_verification, $loggedInAdmin->password)) {
+            return back()->withInput()->with('add_error', 'Verifikasi password Anda salah.');
+        }
+
+        // Simpan admin baru
         Admin::create([
             'nama' => $request->nama,
             'email' => strtolower($request->email),
-            'password' => hash('sha256', $request->password),
+            'password' => Hash::make($request->password),
         ]);
 
         return redirect()->route('admin.profiladmin')->with('success', 'Admin berhasil ditambahkan');
@@ -58,58 +77,51 @@ class AdminController extends Controller
     {
         $admin = Admin::findOrFail($id);
 
-        $nama = $request->input('nama');
-        $email = strtolower($request->input('email'));
-        $currentPassword = $request->input('current_password');
-        $newPassword = $request->input('password');
-
-        $data = [
-            'nama' => $nama,
-            'email' => $email,
-        ];
-
-        if (!empty($newPassword)) {
-            $hashedPasswordLama = hash('sha256', $currentPassword);
-            if ($hashedPasswordLama !== $admin->password) {
-                return back()->with('error', 'Password lama salah!');
-            }
-
-            $data['password'] = hash('sha256', $newPassword);
-        }
-
-        DB::table('admin')->where('id_admin', $id)->update($data);
-
-        return redirect()->route('admin.profiladmin')->with('success', 'Admin berhasil diperbarui.');
-    }
-
-    public function destroy($id)
-    {
-        Admin::destroy($id);
-        return redirect()->route('admin.profiladmin')->with('success', 'Admin berhasil dihapus');
-    }
-
-    public function hapusAdminDenganPassword(Request $request)
-    {
+        // Validasi input
         $request->validate([
-            'id_admin' => 'required|exists:admin,id_admin',
-            'password' => 'required',
+            'nama' => 'required|string|max:255',
+            'old_password' => 'required',
+            'password' => 'nullable|min:6',
         ]);
 
-        $admin = DB::table('admin')->where('id_admin', $request->id_admin)->first();
-
-        if (!$admin) {
-            return back()->with('error', 'Admin tidak ditemukan.');
+    // Verifikasi password lama
+    if (!Hash::check($request->old_password, $admin->password)) {
+        return redirect()->back()
+            ->with('edit_error', 'Password lama salah')
+            ->withInput()
+            ->with('edit_id', $id);
         }
 
-        $inputPasswordHash = hash('sha256', $request->password);
-        if ($inputPasswordHash !== $admin->password) {
-            return back()->with('error', 'Password salah. Admin tidak dapat dihapus.');
+        // Update nama
+        $admin->nama = $request->nama;
+
+        // Update password jika diisi
+        if ($request->filled('password')) {
+            $admin->password = Hash::make($request->password);
         }
 
-        DB::table('admin')->where('id_admin', $request->id_admin)->delete();
-
-        return redirect()->route('admin.profiladmin')->with('success', 'Admin berhasil dihapus.');
+        $admin->save();
+        return redirect()->route('admin.profiladmin')->with('success', 'Data admin berhasil diperbarui!');
     }
+
+
+    public function hapusAdminDenganPassword(Request $request)
+{
+    $admin = Admin::find($request->id_admin);
+
+    if (!$admin || !Hash::check($request->password, $admin->password)) {
+        return back()
+            ->withInput()
+            ->with('delete_error', 'Password salah.')
+            ->with('delete_id', $request->id_admin)
+            ->with('delete_nama', $admin ? $admin->nama : '');
+    }
+
+    $admin->delete();
+
+    return redirect()->route('admin.profiladmin')->with('success', 'Admin berhasil dihapus.');
+}
+
 
     public function daftarInstansi()
     {

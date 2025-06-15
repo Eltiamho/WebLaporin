@@ -61,8 +61,8 @@
                                 <a href="javascript:void(0);" onclick="bukaModal('{{ asset('storage/' . $laporan->lampiran) }}')" class="text-blue-500 hover:underline font-medium">Lihat Gambar 📎</a>
                                     </a>
                                     @else
-    <span class="text-gray-500">Tidak ada lampiran</span>
-@endif
+                                        <span class="text-gray-500">Tidak ada lampiran</span>
+                                    @endif
 
                             </div>
                         </div>
