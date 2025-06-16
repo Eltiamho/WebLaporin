@@ -17,7 +17,13 @@ class Instansi extends Model
 
     protected $fillable = [
         'nama_instansi',
-        'Kontak',
+        'Kontak', // Jika memang di DB masih pakai 'Kontak', ini tetap.
         'status',
     ];
+
+    // Relasi opsional ke Laporan
+    public function laporan()
+    {
+        return $this->hasMany(Laporan::class, 'instansi','id_instansi');
+    }
 }

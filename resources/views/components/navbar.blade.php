@@ -9,9 +9,10 @@
     <ul class="hidden md:flex space-x-6">
     <li><a href="{{ url('/') }}" class="text-white font-semibold hover:text-orange-400">BERANDA</a></li>
     <li><a href="{{ url('/about') }}" class="text-white font-semibold hover:text-orange-400">TENTANG LAPOR.IN</a></li>
-    <li><a href="{{ url('/lapor') }}" class="text-white font-semibold hover:text-orange-400">LAPOR</a></li>
     
     @auth
+    <li><a href="{{ url('/lapor') }}" class="text-white font-semibold hover:text-orange-400">LAPOR</a></li>
+
     <!-- Dropdown Profil -->
     <div class="relative">
         <button id="profile-toggle" class="text-white font-semibold hover:text-orange-400 flex items-center space-x-2">

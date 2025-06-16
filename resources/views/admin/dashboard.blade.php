@@ -18,7 +18,7 @@
         
         
     </p>
-    <h2>jangan</h2>
+    
 </div>
 </body>
 </html>

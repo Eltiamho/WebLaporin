@@ -17,6 +17,8 @@ use App\Http\Controllers\UserProfilController;
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\DonasiController;
 use App\Http\Controllers\LupaPasswordController;
+use App\Http\Controllers\InstansiController;
+
 
 
 /*
