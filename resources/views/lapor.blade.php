@@ -17,7 +17,7 @@
         <div class="space-y-6">
             @foreach ($lapor as $row)
                 @php
-                    $nama = $row->privasi === 'Anonim' ? 'Anonim' : $row->username;
+                    $nama = $row->privasi === 'Privat' ? 'Anonim' : $row->username;
                     $status = strtolower($row->status ?? '');
                     $statusColor = match($status) {
                         'selesai' => 'bg-green-100 text-green-800',
@@ -28,7 +28,7 @@
                     };
                     $showCheck = ($status === 'selesai');
                     $isBencanaAlam = ($row->kategori === 'Bencana Alam');
-                    $isActiveDonasi = ($isBencanaAlam && in_array($status, ['selesai', 'diproses']));
+                    $isActiveDonasi = ($isBencanaAlam && in_array($status, ['diproses']));
                 @endphp
 
                 <div class="rounded-lg shadow-md p-6 mb-6 border hover:shadow-lg transition-shadow duration-300 bg-white border-gray-200">

@@ -98,38 +98,40 @@ public function ubahStatus(Request $request)
         }
         return redirect()->back()->with('status', 'success');
     } catch (\Exception $e) {
-        \Log::error('Gagal mengubah status: ' . $e->getMessage());
+        \Illuminate\Support\Facades\Log::error('Gagal mengubah status: ' . $e->getMessage());
         return redirect()->back()->with('status', 'error');
     }
 }
 
     public function index(Request $request)
-    {
-        $kategori = $request->query('kategori');
-        $instansi = $request->query('instansi');
-    
-        $lapor = DB::table('laporan')
-            ->leftJoin('user', 'laporan.id_user', '=', 'user.id_user')
-            ->leftJoin('instansi', 'laporan.instansi', '=', 'instansi.id_instansi')
-            ->leftJoin('donasi', 'laporan.id_laporan', '=', 'donasi.id_laporan') // JOIN donasi
-            ->select(
-                'laporan.*',
-                'user.username',
-                'instansi.nama_instansi',
-                DB::raw('SUM(donasi.jumlah) as total_donasi')
-            )
-            ->groupBy('laporan.id_laporan', 'user.username', 'instansi.nama_instansi');
-    
-        if (!empty($kategori)) {
-            $lapor->where('laporan.kategori', $kategori);
-        }
-    
-        if (!empty($instansi)) {
-            $lapor->where('instansi.nama_instansi', $instansi);
-        }
-    
-        $lapor = $lapor->orderBy('laporan.id_laporan', 'desc')->get();
-    
-        return view('lapor', ['lapor' => $lapor]);
+{
+    $kategori = $request->query('kategori');
+    $instansi = $request->query('instansi');
+
+    $lapor = DB::table('laporan')
+        ->leftJoin('user', 'laporan.id_user', '=', 'user.id_user')
+        ->leftJoin('instansi', 'laporan.instansi', '=', 'instansi.id_instansi')
+        ->leftJoin('donasi', 'laporan.id_laporan', '=', 'donasi.id_laporan')
+        ->select(
+            'laporan.*',
+            'user.username',
+            'instansi.nama_instansi',
+            DB::raw('SUM(donasi.jumlah) as total_donasi')
+        )
+        ->whereIn('laporan.status', ['diproses', 'selesai']) // ✅ hanya status diproses & selesai
+        ->groupBy('laporan.id_laporan', 'user.username', 'instansi.nama_instansi');
+
+    if (!empty($kategori)) {
+        $lapor->where('laporan.kategori', $kategori);
     }
+
+    if (!empty($instansi)) {
+        $lapor->where('instansi.nama_instansi', $instansi);
+    }
+
+    $lapor = $lapor->orderBy('laporan.id_laporan', 'desc')->get();
+
+    return view('lapor', ['lapor' => $lapor]);
+}
+
 }
