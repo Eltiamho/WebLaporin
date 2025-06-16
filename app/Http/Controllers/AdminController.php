@@ -151,8 +151,8 @@ public function storeInstansi(Request $request)
 }
     public function editInstansi($id)
 {
-    $instansi = Instansi::findOrFail($id);
-    return view('admin.editinstansi', compact('instansi'));
+    $instansi = Instansi::findOrFail($id); // BUKAN ->get()
+    return view('admin.daftarinstansi', compact('instansi'));
 }
 
 
@@ -171,9 +171,9 @@ public function storeInstansi(Request $request)
     public function ubahInstansi(Request $request)
 {
     $request->validate([
-        'id_instansi' => 'required|integer|exists:instansi,id_instansi',
-        'nama_instansi' => 'required|string|max:255',
-        'kontak' => 'required|string|max:255',
+        'id_instansi' => 'required|exists:instansi,id_instansi',
+        'nama_instansi' => 'required',
+        'kontak' => 'required',
     ]);
 
     $instansi = Instansi::findOrFail($request->id_instansi);
@@ -181,8 +181,9 @@ public function storeInstansi(Request $request)
     $instansi->Kontak = $request->kontak;
     $instansi->save();
 
-    return redirect()->route('admin.daftarinstansi')->with('success', 'Instansi berhasil diperbarui.');
+    return redirect()->route('admin.daftarinstansi')->with('success', 'Data instansi berhasil diperbarui');
 }
+
 
     // public function ubahInstansi(Request $request)
     // {

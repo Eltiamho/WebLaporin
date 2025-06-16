@@ -41,7 +41,6 @@
                 </div>
 
                 <div class="mt-2">
-                    <p>Route ke lupa password: {{ route('lupapassword.form') }}</p>
                     <a href="{{ route('lupapassword.form') }}" class="text-sm text-blue-600 hover:underline">Lupa Password?</a>
                 </div>
             </form>

@@ -71,6 +71,9 @@ Route::get('/lampiran/{id}', [LaporController::class, 'lihatLampiran'])->name('l
 Route::middleware(['auth'])->group(function () {
     Route::get('/ubahprofil', [UserProfilController::class, 'edit'])->name('user.edit');
     Route::post('/ubahprofil', [UserProfilController::class, 'update'])->name('user.update');
+    Route::post('/user/update-password', [UserProfilController::class, 'updatePassword'])->name('user.updatePassword');
+
+    
    
 
 });
@@ -123,6 +126,8 @@ Route::middleware(['is_admin'])->group(function () {
     Route::post('/admin/prosesubahstatusinstansi', [AdminController::class, 'ubahStatusInstansi'])->name('admin.ubahstatusinstansi');
     Route::get('/admin/tambahinstansi', [AdminController::class, 'tambahInstansi'])->name('admin.tambahinstansi');
     Route::post('/admin/tambahinstansi', [AdminController::class, 'storeInstansi'])->name('admin.storeinstansi');
+    Route::delete('/instansi/{id}', [InstansiController::class, 'destroy'])->name('instansi.hapus');
+
 
     // Status Laporan
     Route::post('/admin/ubahstatuslaporan', [LaporController::class, 'ubahStatus'])->name('admin.ubahstatuslaporan');
