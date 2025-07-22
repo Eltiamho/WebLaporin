@@ -85,7 +85,7 @@ Pengembang: Iamho Pegodang, Geovano Galan, Mochamad Rafi Djaenal
 
 ![GitHub contributors](https://img.shields.io/github/contributors/Eltiamho/WebLaporin?style=flat-square)
 ![GitHub contributors](https://img.shields.io/github/contributors/ZPINXD/Laporin?style=flat-square)
-![GitHub contributors](https://img.shields.io/github/contributors/MochamadRafiDjaenalPratama/WebLaporin?style=flat-square)
+![GitHub contributors](https://img.shields.io/github/contributors/MochamadRafiDjaenalPratama/Week-6-php?style=flat-square)
 
 Terima kasih kepada semua yang telah berkontribusi!
 
