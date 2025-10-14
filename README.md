@@ -56,6 +56,9 @@
 9. jalankan server lokal
     ```bash
     php artisan serve
+10. Jalankan vite css
+    ```bash
+    npm run dev
 📂 Struktur Fitur Utama
 File / Folder	Fungsi
 routes/web.php	Routing aplikasi frontend/admin
